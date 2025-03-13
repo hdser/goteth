@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"crypto/tls"
 
 	"fmt"
 	"net"
@@ -19,7 +20,13 @@ func (s *DBService) ConnectHighLevel() error {
 		return err
 	}
 	s.highLevelClient = conn
-	return conn.Ping(context.Background())
+	erro := conn.Ping(context.Background())
+ 	if erro != nil {
+ 		return erro
+ 	}
+ 
+ 	log.Info("high level client is connected")
+ 	return nil
 
 }
 
@@ -48,7 +55,7 @@ func ParseChUrlIntoOptionsHighLevel(url string) clickhouse.Options {
 	password = strings.Split(credentials, ":")[1]
 
 	var dialCount int
-	return clickhouse.Options{
+	options := clickhouse.Options{
 		Addr: []string{fqdn},
 		Auth: clickhouse.Auth{
 			Database: database,
@@ -85,6 +92,12 @@ func ParseChUrlIntoOptionsHighLevel(url string) clickhouse.Options {
 				{Name: utils.CliName, Version: utils.Version},
 			},
 		}}
+	if strings.Contains(fqdn, "clickhouse.cloud") {
+		options.DialContext = nil // remove dial context
+		options.Protocol = clickhouse.Native
+		options.TLS = &tls.Config{}
+	}
+	return options
 }
 
 func (p *DBService) Delete(obj DeletableObject) error {

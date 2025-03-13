@@ -3,6 +3,7 @@ package clientapi
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/attestantio/go-eth2-client/http"
@@ -27,6 +28,7 @@ type APIClientOption func(*APIClient) error
 type APIClient struct {
 	ctx        context.Context
 	Api        *http.Service     // Beacon Node
+	Password   string
 	ELApi      *ethclient.Client // Execution Node
 	Metrics    db.DBMetrics
 	maxRetries int
@@ -44,6 +46,14 @@ func NewAPIClient(ctx context.Context, bnEndpoint string, maxRequestRetries int,
 		blocksBook: utils.NewRoutineBook(1, "api-cli-blocks"),
 		txBook:     utils.NewRoutineBook(maxParallelConns, "api-cli-tx"),
 	}
+
+	parsedURL, err := url.Parse(bnEndpoint)
+ 	if err == nil {
+ 		if parsedURL.User != nil {
+ 			password, _ := parsedURL.User.Password() // xxxxx
+ 			apiService.Password = password
+ 		}
+ 	}
 
 	bnCli, err := http.New(
 		ctx,

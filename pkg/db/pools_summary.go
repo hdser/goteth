@@ -31,7 +31,7 @@ var (
 				ON t_validator_rewards_summary.f_val_idx = t_eth2_pubkeys.f_val_idx
 			LEFT JOIN t_proposer_duties 
 				ON t_validator_rewards_summary.f_val_idx = t_proposer_duties.f_val_idx 
-				AND t_validator_rewards_summary.f_epoch = toUInt64(t_proposer_duties.f_proposer_slot/32)
+				AND t_validator_rewards_summary.f_epoch = toUInt64(t_proposer_duties.f_proposer_slot/16)
 			WHERE f_epoch = $1 AND f_status = 1 AND f_pool_name != ''
 			GROUP BY t_eth2_pubkeys.f_pool_name, f_epoch`
 )

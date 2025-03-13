@@ -103,6 +103,12 @@ var BlocksCommand = &cli.Command{
 			EnvVars:     []string{"ANALYZER_BEACON_CONTRACT_ADDRESS"},
 			DefaultText: "mainnet",
 		},
+		&cli.StringFlag{
+			Name:        "newrelic-key",
+			Usage:       "Newrelic api key",
+			EnvVars:     []string{"NEWRELIC_KEY"},
+			DefaultText: "",
+		},
 	},
 }
 
