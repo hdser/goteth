@@ -1,20 +1,14 @@
 package spec
 
 const (
-	MainnetGenesis               = 1606824023
-	SepoliaGenesis               = 1655733600
-	HoleskyGenesis               = 1695902400
-	MainnetBeaconContractAddress = "0x00000000219ab540356cBB839Cbe05303d7705Fa"
-	SepoliaBeaconContractAddress = "0x7f02C3E3c98b133055B8B348B2Ac625669Ed295D"
-	HoleskyBeaconContractAddress = "0x4242424242424242424242424242424242424242"
+	GnosisGenesis				 = 1638993340
+	GnosisBeaconContractAddress  = "0x0B98057eA310F4d31F2a452B414647007d1645d9"
 	DepositEventTopic            = "0x649bbc62d0e31342afea4e5cd82d4049e7e1ee912fc0889aa790803be39038c5"
 	DepositEventDataLength       = 576
 )
 
 var BeaconContractAddresses = map[string]string{
-	"mainnet": MainnetBeaconContractAddress,
-	"sepolia": SepoliaBeaconContractAddress,
-	"holesky": HoleskyBeaconContractAddress,
+	"gnosis": GnosisBeaconContractAddress,
 }
 
 /*
@@ -23,14 +17,14 @@ Phase0
 
 const (
 	MaxEffectiveInc             = 32
-	BaseRewardFactor            = 64
+	BaseRewardFactor            = 25
 	BaseRewardPerEpoch          = 4
 	EffectiveBalanceInc         = 1000000000
-	SlotsPerEpoch               = 32
+	SlotsPerEpoch               = 16
 	ProposerRewardQuotient      = 8
 	SlotsPerHistoricalRoot      = 8192
-	SlotSeconds                 = 12
-	EpochSlots                  = 32
+	SlotSeconds                 = 5
+	EpochSlots                  = 16
 	WhistleBlowerRewardQuotient = 512
 	MinInclusionDelay           = 1
 

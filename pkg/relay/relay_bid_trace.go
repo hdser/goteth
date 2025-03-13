@@ -142,11 +142,10 @@ func (r RelayBidsPerSlot) GetBidsAtSlot(slot phase0.Slot) map[string]v1.BidTrace
 func getNetworkRelays(genesisTime uint64) []string {
 
 	switch genesisTime {
-	case spec.MainnetGenesis:
-		return mainnetRelayList
 
-	case spec.HoleskyGenesis:
-		return holeskyRelayList
+	case spec.GnosisGenesis:
+		return []string{}
+
 	default:
 		log.Errorf("could not find network. Genesis time: %d", genesisTime)
 		return []string{}
