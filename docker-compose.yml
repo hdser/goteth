@@ -1,11 +1,10 @@
-version: "3.7"
-
 services:
   goteth:
     build:
       context: ./
       dockerfile: Dockerfile
     init: true
+    container_name: goteth
     command: >-
       blocks
       --log-level=${GOTETH_LOG_LEVEL}
@@ -24,40 +23,3 @@ services:
       --beacon-contract-address=${GOTETH_ANALYZER_BEACON_CONTRACT_ADDRESS:-mainnet}
     network_mode: "host"
     restart: "always"
-    depends_on:
-      clickhouse:
-        condition: service_healthy
-
-  val-window:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    init: true
-    command: >-
-      val-window
-      --log-level=${GOTETH_LOG_LEVEL}
-      --bn-endpoint=${GOTETH_BN_ENDPOINT}
-      --db-url=${GOTETH_DB_URL}
-      --num-epochs=${GOTETH_VAL_WINDOW_NUM_EPOCHS:-1}
-    network_mode: "host"
-    restart: "always"
-
-  clickhouse:
-    image: clickhouse/clickhouse-server:24
-    user: "$UID:$GID"
-    hostname: clickhouse
-    environment:
-      - CLICKHOUSE_DB=${CH_DB:-goteth_default}
-      - CLICKHOUSE_USER=${CH_USER:-username}
-      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
-      - CLICKHOUSE_PASSWORD=${CH_PASSWORD:-password}
-    volumes:
-      - ./clickhouse_data/data:/var/lib/clickhouse/
-      - ./clickhouse_data/logs:/var/log/clickhouse-server/
-    ports:
-      - "127.0.0.1:${CH_HTTP_PORT:-8123}:8123"
-      - "127.0.0.1:${CH_NATIVE_PORT:-9000}:9000"
-      - "127.0.0.1:${CH_SQL_PORT:-9005}:9005"
-    healthcheck: # executed inside the container
-      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping
-      interval: 5s
